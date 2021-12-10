@@ -1,0 +1,79 @@
+---
+- name: Fabric Wide Settings - Enable Force Subnet Check and Enforce Domain Validation.  
+  cisco.aci.aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    path: /api/mo/uni.json
+    method: post
+    content:
+      infraSetPol:
+        attributes:
+          annotation: ''
+          descr: ''
+          dn: uni/infra/settings
+          domainValidation: 'yes'
+          enableRemoteLeafDirect: 'no'
+          enforceSubnetCheck: 'yes'
+          name: default
+          nameAlias: ''
+          opflexpAuthenticateClients: 'yes'
+          opflexpUseSsl: 'yes'
+          ownerKey: ''
+          ownerTag: ''
+          reallocateGipo: 'no'
+          unicastXrEpLearnDisable: 'yes'
+          validateOverlappingVlans: 'no'
+  delegate_to: localhost
+
+
+- name: BGP Route Reflector  
+  aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    path: /api/mo/uni.json
+    method: post
+    content:
+      bgpInstPol:
+        attributes:
+          annotation: ''
+          descr: ''
+          dn: uni/fabric/bgpInstP-default
+          name: default
+          nameAlias: ''
+          ownerKey: ''
+          ownerTag: ''
+        children:
+        - bgpRRP:
+            attributes:
+              annotation: ''
+              descr: ''
+              name: ''
+              nameAlias: ''
+            children:
+            - bgpRRNodePEp:
+                attributes:
+                  annotation: ''
+                  descr: ''
+                  id: '103'
+                  nameAlias: ''
+                  podId: '1'
+        - bgpExtRRP:
+            attributes:
+              annotation: ''
+              descr: ''
+              name: ''
+              nameAlias: ''
+        - bgpAsP:
+            attributes:
+              annotation: ''
+              asn: '65000'
+              descr: ''
+              name: ''
+              nameAlias: ''
+  delegate_to: localhost

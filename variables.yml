@@ -1,0 +1,62 @@
+users:
+- {user: "Student1", pass: "$tuD3nt#1"}
+- {user: "Student2", pass: "$tuD3nt#2"}
+- {user: "Student3", pass: "$tuD3nt#3"}
+- {user: "Student4", pass: "$tuD3nt#4"}
+- {user: "Student5", pass: "$tuD3nt#5"}
+- {user: "Student6", pass: "$tuD3nt#6"}
+- {user: "Student7", pass: "$tuD3nt#7"}
+- {user: "Student8", pass: "$tuD3nt#8"}
+- {user: "Student9", pass: "$tuD3nt#9"}
+- {user: "Instructor", pass: "1n$truct0r"}
+
+ntp_server: "10.0.99.127"
+
+vlan_pool_vars:
+- {"pool_name":"S1_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 1", "vlan_start": 100, "vlan_end": 199 }
+- {"pool_name":"S2_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 2", "vlan_start": 200, "vlan_end": 299 }
+- {"pool_name":"S3_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 3", "vlan_start": 300, "vlan_end": 399 }
+- {"pool_name":"S4_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 4", "vlan_start": 400, "vlan_end": 499 }
+- {"pool_name":"S5_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 5", "vlan_start": 500, "vlan_end": 599 }
+- {"pool_name":"S6_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 6", "vlan_start": 600, "vlan_end": 699 }
+- {"pool_name":"S7_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 7", "vlan_start": 700, "vlan_end": 799 }
+- {"pool_name":"S8_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 8", "vlan_start": 800, "vlan_end": 899 }
+- {"pool_name":"S9_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 9", "vlan_start": 900, "vlan_end": 999 }
+- {"pool_name":"Instructor_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Instructor", "vlan_start": 1500, "vlan_end": 1599 }
+
+domains_vars:
+- {"domain_name":"S1_PhyDom", "domain_type":"phys", "vlan_pool_name":"S1_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S2_PhyDom", "domain_type":"phys", "vlan_pool_name":"S2_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S3_PhyDom", "domain_type":"phys", "vlan_pool_name":"S3_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S4_PhyDom", "domain_type":"phys", "vlan_pool_name":"S4_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S5_PhyDom", "domain_type":"phys", "vlan_pool_name":"S5_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S6_PhyDom", "domain_type":"phys", "vlan_pool_name":"S6_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S7_PhyDom", "domain_type":"phys", "vlan_pool_name":"S7_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S8_PhyDom", "domain_type":"phys", "vlan_pool_name":"S8_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S9_PhyDom", "domain_type":"phys", "vlan_pool_name":"S9_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"Instructor_PhyDom", "domain_type":"phys", "vlan_pool_name":"Instructor_VlanPool","vlan_pool_mode":"static"}
+
+aaep_vars:
+- {"aaep_name":"S1_AAEP", "aaep_description":"Student 1 AAEP", "aaep_domain_name":"S1_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S2_AAEP", "aaep_description":"Student 2 AAEP", "aaep_domain_name":"S2_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S3_AAEP", "aaep_description":"Student 3 AAEP", "aaep_domain_name":"S3_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S4_AAEP", "aaep_description":"Student 4 AAEP", "aaep_domain_name":"S4_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S5_AAEP", "aaep_description":"Student 5 AAEP", "aaep_domain_name":"S5_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S6_AAEP", "aaep_description":"Student 6 AAEP", "aaep_domain_name":"S6_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S7_AAEP", "aaep_description":"Student 7 AAEP", "aaep_domain_name":"S7_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S8_AAEP", "aaep_description":"Student 8 AAEP", "aaep_domain_name":"S8_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S9_AAEP", "aaep_description":"Student 9 AAEP", "aaep_domain_name":"S9_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"Instructor_AAEP", "aaep_description":"Instructor AAEP", "aaep_domain_name":"Instructor_PhyDom", "aaep_domain_type":"phys"}
+
+simple_tenant_vars:
+  tenant: "Instructor"
+  tenant_desc: "Instructor Tenant"
+  vrf: "Instructor"
+  ap: "Instructor"
+  ap_desc: "Instructor App Profile"
+  bd: "Instructor"
+  bd_gw: 192.168.1.254
+  bd_mask: 24
+  epg: "Instructor"
+  epg_desc: "Instructor EPG"
+  

@@ -1,0 +1,29 @@
+---
+# tasks file for domains
+  - name: Add a physical domain for EPG
+    cisco.aci.aci_domain:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      use_proxy: no
+      validate_certs: no
+      domain: "{{item.domain_name}}"
+      domain_type: "{{item.domain_type}}"
+      state: present
+    delegate_to: localhost
+    loop: "{{domains_vars}}"
+  
+  - name: Bind the physical domain to VLAN pool
+    cisco.aci.aci_domain_to_vlan_pool:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      use_proxy: no
+      validate_certs: no
+      domain: "{{item.domain_name}}"
+      domain_type: "{{item.domain_type}}"
+      pool: "{{item.vlan_pool_name}}"
+      pool_allocation_mode: "{{item.vlan_pool_mode}}"
+      state: present
+    delegate_to: localhost
+    loop: "{{domains_vars}}"

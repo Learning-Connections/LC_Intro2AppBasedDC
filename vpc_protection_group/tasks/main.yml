@@ -1,0 +1,16 @@
+---
+# tasks file for vpc_protection_group
+
+- name: Add vPC Protection Group for Leaf 101-102
+  cisco.aci.aci_switch_policy_vpc_protection_group:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    protection_group: vPC_101-102
+    protection_group_id: 101
+    switch_1_id: 101
+    switch_2_id: 102
+    state: present
+  delegate_to: localhost

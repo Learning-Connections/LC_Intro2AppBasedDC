@@ -1,0 +1,67 @@
+---
+# tasks file for ntp
+- name: Set date and time to UTC
+  cisco.aci.aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    path: /api/mo/uni.json
+    method: post
+    content:
+      datetimeFormat:
+        attributes:
+          annotation: ''
+          descr: ''
+          displayFormat: utc
+          dn: uni/fabric/format-default
+          name: default
+          nameAlias: ''
+          ownerKey: ''
+          ownerTag: ''
+          showOffset: enabled
+          tz: p0_UTC
+  delegate_to: localhost
+
+- name: Set NTP
+  cisco.aci.aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    path: /api/mo/uni.json
+    method: post
+    content:
+      datetimePol:
+        attributes:
+          StratumValue: '8'
+          adminSt: enabled
+          annotation: ''
+          authSt: disabled
+          descr: ''
+          dn: uni/fabric/time-default
+          masterMode: disabled
+          name: default
+          nameAlias: ''
+          ownerKey: ''
+          ownerTag: ''
+          serverState: enabled
+        children:
+        -  datetimeNtpProv:
+            attributes:
+              annotation: ''
+              descr: ''
+              keyId: '0'
+              maxPoll: '6'
+              minPoll: '4'
+              name: "{{ntp_server}}"
+              nameAlias: ''
+              preferred: 'yes'
+              trueChimer: disabled
+            children:
+            - datetimeRsNtpProvToEpg:
+                attributes:
+                  annotation: ''
+                  tDn: uni/tn-mgmt/mgmtp-default/oob-default
+  delegate_to: localhost

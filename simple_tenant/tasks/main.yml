@@ -1,0 +1,144 @@
+---
+# tasks file for simple_tenant
+- name: 1 - Create new Tenant {{simple_tenant_vars.tenant}}
+  cisco.aci.aci_tenant:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    state: present
+    tenant: "{{simple_tenant_vars.tenant}}"
+    description: "{{simple_tenant_vars.tenant_desc}}"
+  delegate_to: localhost
+
+- name: 2 - Create VRF {{simple_tenant_vars.vrf}} for tenant {{simple_tenant_vars.tenant}}
+  cisco.aci.aci_vrf:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    state: present
+    description: 
+    vrf: "{{simple_tenant_vars.vrf}}"
+    preferred_group: enabled
+    tenant: "{{simple_tenant_vars.tenant}}"
+  delegate_to: localhost
+
+- name: 3 - Create Application Profile {{simple_tenant_vars.ap}}
+  cisco.aci.aci_ap:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    state: present
+    description: "{{simple_tenant_vars.ap_desc}}"
+    ap: "{{simple_tenant_vars.ap}}"
+    tenant: "{{simple_tenant_vars.tenant}}"
+  delegate_to: localhost
+
+- name: 4 - Create Bridge Domain {{simple_tenant_vars.bd}} 
+  cisco.aci.aci_bd:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    state: present
+    tenant: "{{simple_tenant_vars.tenant}}"
+    bd: "{{simple_tenant_vars.bd}}"
+  delegate_to: localhost
+
+- name: 5 - Create a subnet under the BD {{simple_tenant_vars.bd}} 
+  cisco.aci.aci_bd_subnet:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    tenant: "{{simple_tenant_vars.tenant}}"
+    bd: "{{simple_tenant_vars.bd}}"
+    gateway: "{{simple_tenant_vars.bd_gw}}"
+    mask: "{{simple_tenant_vars.bd_mask}}"
+    state: present
+  delegate_to: localhost
+
+- name: 6 - Create EPG {{simple_tenant_vars.epg}}
+  cisco.aci.aci_epg:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    tenant: "{{simple_tenant_vars.tenant}}"
+    ap: "{{simple_tenant_vars.ap}}"
+    epg: "{{simple_tenant_vars.epg}}"
+    description: "{{simple_tenant_vars.epg_desc}}"
+    bd: "{{simple_tenant_vars.bd}}"
+    monitoring_policy: default
+    preferred_group: yes
+    state: present
+  delegate_to: localhost
+
+- name: 7 -  Add a new physical domain to EPG binding
+  cisco.aci.aci_epg_to_domain:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    tenant: "{{simple_tenant_vars.tenant}}"
+    ap: "{{simple_tenant_vars.ap}}"
+    epg: "{{simple_tenant_vars.epg}}"
+    domain: "{{domains_vars[8].domain_name}}"
+    domain_type: "{{domains_vars[8].domain_type}}"
+    state: present
+  delegate_to: localhost
+
+- name: 8 - Create a Virtual Port Channel (VPC) Interface Policy Group
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    lag_type: node
+    policy_group: "vPC_Instructor"
+    link_level_policy: "10G"
+    cdp_policy: "CDP_Enable"
+    lldp_policy: "LLDP_Enable"
+    port_channel_policy: "LACP_Active"
+    aep: "Instructor_AAEP"
+    state: present
+  delegate_to: localhost
+
+- name: 9 - Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
+  cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    interface_type: vpc
+    interface_profile: "L101-102_IntSelector"
+    access_port_selector: "vPC_Instructor"
+    port_blk: "vPC_Instructor_port_block"
+    from_port: "48"
+    to_port: "48"
+    policy_group: "vPC_Instructor"
+    state: present
+  delegate_to: localhost
+
+- name: 10 - Deploy Static Path binding for {{simple_tenant_vars.epg}} EPG
+  cisco.aci.aci_static_binding_to_epg:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    validate_certs: no
+    tenant: "{{simple_tenant_vars.tenant}}"
+    ap: "{{simple_tenant_vars.ap}}"
+    epg: "{{simple_tenant_vars.epg}}"
+    encap_id: 1501
+    deploy_immediacy: immediate
+    interface_mode: trunk
+    interface_type: vpc
+    pod_id: 1
+    leafs: 
+      - "101"
+      - "102"
+    interface: 'vPC_Instructor'
+    state: present
+  delegate_to: localhost

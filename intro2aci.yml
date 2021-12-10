@@ -1,0 +1,44 @@
+---
+- name: Introduction to Application Base Data Center - Ansible Playbook 
+  hosts: [Simulator]
+  connection: local
+  gather_facts: no
+  vars_files:
+   - credentials.yml  
+   - variables.yml
+  roles:
+  # Create Students users with Admin rights
+    - role: create_users
+      tags: create_users
+  # Add Spine and Leaf to the Fabric inventory
+    - role: fabric_node
+      tags: fabric_node
+  # Configure NTP and time in UTC 
+    - role: ntp
+      tags: ntp
+  # Configure System Settings:
+  # - Enable Force Subnet Check and Enforce Domain Validation
+  # - BGP Route Reflector
+    - role: system_settings
+      tags: system_settings
+  # Configure Interfaces Access Policies (CDP, LLDP, MCP, ...  )
+    - role: access_policies
+      tags: access_policies
+  # Configure Switch Policies
+    - role: switch_policies
+      tags: switch_policies
+  # Configure vPC Protection Group
+    - role: vpc_protection_group
+      tags: vpc_protection_group
+  # Configure VLAN Pool
+    - role: vlan_pool
+      tags: vlan_pool
+  # Configure Domains
+    - role: domains
+      tags: domains
+  # Configure AAEP
+    - role: aaep
+      tags: aaep
+  # Configure Simple Tenant
+    - role: simple_tenant
+      tags: simple_tenant

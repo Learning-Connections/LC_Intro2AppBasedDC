@@ -1,0 +1,46 @@
+---
+# tasks file for fabric_node
+- name: Add Leaf 101 to Fabric Node
+  cisco.aci.aci_fabric_node:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    serial: TEP-1-101
+    pod_id: 1
+    node_id: 101
+    switch: leaf101
+    role: leaf
+    state: present
+    use_proxy: no
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Add Leaf 102 to Fabric Node
+  cisco.aci.aci_fabric_node:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    serial: TEP-1-102
+    pod_id: 1
+    node_id: 102
+    switch: leaf102
+    role: leaf
+    state: present
+    use_proxy: no
+    validate_certs: no
+  delegate_to: localhost
+
+- name: Add Spine 103 to Fabric Node
+  cisco.aci.aci_fabric_node:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    serial: TEP-1-103
+    pod_id: 1
+    node_id: 103
+    switch: spine103
+    role: spine
+    state: present
+    use_proxy: no
+    validate_certs: no
+  delegate_to: localhost

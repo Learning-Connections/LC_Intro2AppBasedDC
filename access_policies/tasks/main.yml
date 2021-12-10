@@ -1,0 +1,163 @@
+---
+# tasks file for access_policies
+- name: Create Link Level access_policies
+  cisco.aci.aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    path: /api/mo/uni.json
+    method: post
+    content:
+      fabricHIfPol:
+        attributes:
+          dn: uni/infra/hintfpol-"{{item.speed}}"
+          name: "{{item.speed}}"
+          speed: "{{item.speed}}"
+          rn: hintfpol-"{{item.speed}}"
+  delegate_to: localhost
+  loop:
+  - { speed: 100M }
+  - { speed: 1G }
+  - { speed: 10G }
+  - { speed: 25G }
+
+- name: Create CDP Enable Policy
+  cisco.aci.aci_interface_policy_cdp:
+    host: "{{inventory_hostname}}"
+    name: CDP_Enable
+    admin_state: yes
+    username: "{{username}}"
+    password: "{{password}}"    
+    use_proxy: no
+    validate_certs: no
+    state: present
+  delegate_to: localhost
+
+- name: Create CDP Disable Policy
+  cisco.aci.aci_interface_policy_cdp:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    name: CDP_Disable
+    admin_state: no
+    use_proxy: no
+    validate_certs: no
+    state: present
+  delegate_to: localhost
+
+- name: Create LLDP Enable Policy  
+  cisco.aci.aci_interface_policy_lldp:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    lldp_policy: LLDP_Enable
+    receive_state: yes
+    transmit_state: yes
+  delegate_to: localhost
+
+- name: Create LLDP Disable Policy  
+  cisco.aci.aci_interface_policy_lldp:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    lldp_policy: LLDP_Disable
+    receive_state: no
+    transmit_state: no
+  delegate_to: localhost
+
+- name: Create MCP Enable Policy  
+  cisco.aci.aci_interface_policy_mcp:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    mcp: MCP_Enable
+    admin_state: yes
+  delegate_to: localhost
+
+- name: Create MCP Disable Policy  
+  cisco.aci.aci_interface_policy_mcp:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    mcp: MCP_Disable
+    admin_state: no
+  delegate_to: localhost
+
+- name: Create Port Channel LACP Active
+  cisco.aci.aci_interface_policy_port_channel:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    port_channel: LACP_Active
+    mode: active
+  delegate_to: localhost
+
+- name: Create Port Channel LACP Passive
+  cisco.aci.aci_interface_policy_port_channel:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    port_channel: LACP_Passive
+    mode: passive
+  delegate_to: localhost
+
+- name: Create Port Channel LACP Active No Suspend
+  cisco.aci.aci_interface_policy_port_channel:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"    
+    use_proxy: no
+    validate_certs: no
+    port_channel: LACP_Active_NoSuspend
+    mode: active
+    suspend_individual: no
+  delegate_to: localhost
+
+- name: Create Port Channel MAC pinning
+  cisco.aci.aci_interface_policy_port_channel:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    port_channel: MACPinning
+    mode: mac-pin
+  delegate_to: localhost
+
+- name: Add a L2 Global Policy Interface
+  cisco.aci.aci_interface_policy_l2:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    l2_policy: GlobalScope
+    vlan_scope: global
+    state: present
+  delegate_to: localhost
+
+- name: Add a L2 Local Policy Interface
+  cisco.aci.aci_interface_policy_l2:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    l2_policy: LocalScope
+    vlan_scope: portlocal
+    state: present
+  delegate_to: localhost

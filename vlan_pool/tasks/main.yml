@@ -1,0 +1,5 @@
+---
+# tasks file for vlan_pool
+  - name: Configure VLAN Pools
+    include_tasks: vlan_pools.yml
+    loop: "{{vlan_pool_vars}}"

@@ -1,0 +1,59 @@
+---
+# tasks file for create_users
+- name: Add users to the APIC cluster
+  cisco.aci.aci_aaa_user:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      aaa_user: "{{item.user}}"
+      aaa_password: "{{item.pass}}"
+      clear_password_history: yes
+      expiration: never
+      expires: no
+      state: present
+      use_proxy: no
+      validate_certs: no
+  delegate_to: localhost
+  with_items: "{{users}}"
+
+- name: Add role admin and Security Domain all to the users
+  cisco.aci.aci_rest:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      validate_certs: no
+      use_proxy: no
+      path: /api/mo/uni/userext/user-{{item.user}}.json
+      method: post
+      content:
+        {
+          "aaaUserDomain":
+            {
+              "attributes":
+                {
+                  "dn": "uni/userext/user-{{item.user}}/userdomain-all",
+                  "name": "all",
+                  "rn": "userdomain-all",
+                  "status": "created,modified",
+                },
+              "children":
+                [
+                  {
+                    "aaaUserRole":
+                      {
+                        "attributes":
+                          {
+                            "dn": "uni/userext/user-{{item.user}}/userdomain-all/role-admin",
+                            "name": "admin",
+                            "privType": "writePriv",
+                            "rn": "role-admin",
+                            "status": "created,modified",
+                          },
+                        "children": [],
+                      },
+                  },
+                ],
+            },
+        }
+  delegate_to: localhost
+  with_items: "{{users}}"

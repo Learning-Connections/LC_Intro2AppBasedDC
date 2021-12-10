@@ -1,0 +1,28 @@
+---
+# tasks file for aaep
+- name: Configure Attachable Access Entity Profile 
+  aci_aep:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    aep: "{{item.aaep_name}}"
+    description: "{{item.aaep_description}}"
+    state: present
+  delegate_to: localhost
+  loop: "{{aaep_vars}}"
+
+- name: Bind AAEP to Domains
+  aci_aep_to_domain: 
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    aep: "{{item.aaep_name}}"
+    domain: "{{item.aaep_domain_name}}"
+    domain_type: "{{item.aaep_domain_type}}"
+    state: present
+  delegate_to: localhost
+  loop: "{{aaep_vars}}"

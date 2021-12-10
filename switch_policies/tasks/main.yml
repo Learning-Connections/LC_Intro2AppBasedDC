@@ -1,0 +1,90 @@
+---
+# tasks file for switch_policies
+- name: create Access Switch Policy Group
+  cisco.aci.aci_rest:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    method: post
+    path: /api/mo/uni.json
+    content:
+     infraAccNodePGrp:
+      attributes:
+        annotation: ''
+        descr: ''
+        dn: uni/infra/funcprof/accnodepgrp-LeafAccessPG
+        name: LeafAccessPG
+        nameAlias: ''
+        ownerKey: ''
+        ownerTag: ''
+  delegate_to: localhost
+
+
+
+- name: creating the Leaf (Switch) Profiles 
+  cisco.aci.aci_switch_policy_leaf_profile:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    leaf_profile: "{{item.sw_name}}"
+    state: present
+  loop:
+  - {sw_name: leaf101_SwProf }
+  - {sw_name: leaf102_SwProf }
+  - {sw_name: leaf101-102_SwProf }
+  delegate_to: localhost
+
+- name: adding the switch policy leaf profiles selector 
+  cisco.aci.aci_switch_leaf_selector:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    policy_group: "LeafAccessPG"
+    leaf_profile: "{{item.sw_prof}}"
+    leaf: "{{item.sw_prof}}"
+    leaf_node_blk: "{{item.sw_prof}}"
+    from: "{{item.leaf_start_id}}"
+    to: "{{item.leaf_end_id}}"
+    state: present
+  loop:
+   - {sw_prof: leaf101_SwProf ,leaf_start_id: 101 ,leaf_end_id: 101  }
+   - {sw_prof: leaf102_SwProf ,leaf_start_id: 102 ,leaf_end_id: 102  }
+   - {sw_prof: leaf101-102_SwProf ,leaf_start_id: 101 ,leaf_end_id: 102  }
+  delegate_to: localhost
+
+- name: Add a new leaf_interface_profile
+  cisco.aci.aci_interface_policy_leaf_profile:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    leaf_interface_profile: "{{item.intSelector}}"
+    state: present
+  loop:
+   - {intSelector: L101_IntSelector}
+   - {intSelector: L102_IntSelector}
+   - {intSelector: L101-102_IntSelector}   
+  delegate_to: localhost
+
+- name: Associating the interface selector profiles to a switch policy leaf profile
+  cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+    host: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    use_proxy: no
+    validate_certs: no
+    leaf_profile: "{{item.sw_prof}}"
+    interface_selector: "{{item.intSelector}}"
+    state: present
+  loop:
+   - {sw_prof: leaf101_SwProf , intSelector: L101_IntSelector }
+   - {sw_prof: leaf102_SwProf , intSelector: L102_IntSelector }
+   - {sw_prof: leaf101-102_SwProf , intSelector: L101-102_IntSelector }
+  delegate_to: localhost

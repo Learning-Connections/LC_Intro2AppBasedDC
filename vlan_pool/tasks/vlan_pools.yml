@@ -1,0 +1,28 @@
+---
+  - name: Add Static VLAN pool "{{item.pool_name}}"
+    cisco.aci.aci_vlan_pool:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      use_proxy: no
+      validate_certs: no
+      pool: "{{item.pool_name}}"
+      pool_allocation_mode: "{{item.pool_mode}}"
+      description: "{{item.pool_description}}"
+      state: present
+    delegate_to: localhost
+    
+  - name: Add a VLAN encap block for "{{item.pool_name}}"
+    cisco.aci.aci_vlan_pool_encap_block:
+      host: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      use_proxy: no
+      validate_certs: no
+      pool: "{{item.pool_name}}"
+      pool_allocation_mode: "{{item.pool_mode}}"
+      block_name: "{{item.pool_name}}"
+      block_start: "{{item.vlan_start}}"
+      block_end: "{{item.vlan_end}}"
+      state: present
+    delegate_to: localhost
