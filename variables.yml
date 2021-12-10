@@ -8,7 +8,8 @@ users:
 - {user: "Student7", pass: "$tuD3nt#7"}
 - {user: "Student8", pass: "$tuD3nt#8"}
 - {user: "Student9", pass: "$tuD3nt#9"}
-- {user: "Instructor", pass: "1n$truct0r"}
+- {user: "Student10", pass: "$tuD3nt#10"}
+- {user: "Instructor", pass: "1n$Tr#ct0r"}
 
 ntp_server: "10.0.99.127"
 
@@ -22,6 +23,7 @@ vlan_pool_vars:
 - {"pool_name":"S7_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 7", "vlan_start": 700, "vlan_end": 799 }
 - {"pool_name":"S8_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 8", "vlan_start": 800, "vlan_end": 899 }
 - {"pool_name":"S9_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 9", "vlan_start": 900, "vlan_end": 999 }
+- {"pool_name":"S10_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Student 10", "vlan_start": 1000, "vlan_end": 1099 }
 - {"pool_name":"Instructor_VlanPool", "pool_mode":"static", "pool_description":"Vlan Pool Instructor", "vlan_start": 1500, "vlan_end": 1599 }
 
 domains_vars:
@@ -34,6 +36,7 @@ domains_vars:
 - {"domain_name":"S7_PhyDom", "domain_type":"phys", "vlan_pool_name":"S7_VlanPool","vlan_pool_mode":"static"}
 - {"domain_name":"S8_PhyDom", "domain_type":"phys", "vlan_pool_name":"S8_VlanPool","vlan_pool_mode":"static"}
 - {"domain_name":"S9_PhyDom", "domain_type":"phys", "vlan_pool_name":"S9_VlanPool","vlan_pool_mode":"static"}
+- {"domain_name":"S10_PhyDom", "domain_type":"phys", "vlan_pool_name":"S10_VlanPool","vlan_pool_mode":"static"}
 - {"domain_name":"Instructor_PhyDom", "domain_type":"phys", "vlan_pool_name":"Instructor_VlanPool","vlan_pool_mode":"static"}
 
 aaep_vars:
@@ -46,6 +49,7 @@ aaep_vars:
 - {"aaep_name":"S7_AAEP", "aaep_description":"Student 7 AAEP", "aaep_domain_name":"S7_PhyDom", "aaep_domain_type":"phys"}
 - {"aaep_name":"S8_AAEP", "aaep_description":"Student 8 AAEP", "aaep_domain_name":"S8_PhyDom", "aaep_domain_type":"phys"}
 - {"aaep_name":"S9_AAEP", "aaep_description":"Student 9 AAEP", "aaep_domain_name":"S9_PhyDom", "aaep_domain_type":"phys"}
+- {"aaep_name":"S10_AAEP", "aaep_description":"Student 10 AAEP", "aaep_domain_name":"S10_PhyDom", "aaep_domain_type":"phys"}
 - {"aaep_name":"Instructor_AAEP", "aaep_description":"Instructor AAEP", "aaep_domain_name":"Instructor_PhyDom", "aaep_domain_type":"phys"}
 
 simple_tenant_vars:
